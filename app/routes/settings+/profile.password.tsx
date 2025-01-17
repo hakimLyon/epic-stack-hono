@@ -1,7 +1,7 @@
 import { getFormProps, getInputProps, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { type SEOHandle } from '@nasa-gcn/remix-seo'
-import { data, redirect, Form, Link, useActionData } from 'react-router'
+import { data, redirect, Form, Link } from 'react-router'
 import { z } from 'zod'
 import { ErrorList, Field } from '#app/components/forms.tsx'
 import { Button } from '#app/components/ui/button.tsx'
@@ -113,8 +113,9 @@ export async function action({ request }: Route.ActionArgs) {
 	)
 }
 
-export default function ChangePasswordRoute() {
-	const actionData = useActionData<typeof action>()
+export default function ChangePasswordRoute({
+	actionData,
+}: Route.ComponentProps) {
 	const isPending = useIsPending()
 
 	const [form, fields] = useForm({

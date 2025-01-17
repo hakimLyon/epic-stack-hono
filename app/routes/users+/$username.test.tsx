@@ -11,7 +11,6 @@ import { getSessionExpirationDate, sessionKey } from '#app/utils/auth.server.ts'
 import { prisma } from '#app/utils/db.server.ts'
 import { authSessionStorage } from '#app/utils/session.server.ts'
 import { createUser, getUserImages } from '#tests/db-utils.ts'
-import { type Route as RootRoute } from '../../+types/root.ts'
 import { default as UsernameRoute, loader } from './$username.tsx'
 
 test('The user profile when not logged in as self', async () => {
@@ -69,7 +68,7 @@ test('The user profile when logged in as self', async () => {
 			loader: async (args) => {
 				// add the cookie header to the request
 				args.request.headers.set('cookie', cookieHeader)
-				return rootLoader(args as RootRoute.LoaderArgs)
+				return rootLoader({ ...args, context: args.context })
 			},
 			children: [
 				{

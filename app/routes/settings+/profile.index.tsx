@@ -2,7 +2,7 @@ import { getFormProps, getInputProps, useForm } from '@conform-to/react'
 import { getZodConstraint, parseWithZod } from '@conform-to/zod'
 import { invariantResponse } from '@epic-web/invariant'
 import { type SEOHandle } from '@nasa-gcn/remix-seo'
-import { data, Link, useFetcher, useLoaderData } from 'react-router'
+import { data, Link, useFetcher } from 'react-router'
 import { z } from 'zod'
 import { ErrorList, Field } from '#app/components/forms.tsx'
 import { Button } from '#app/components/ui/button.tsx'
@@ -14,7 +14,7 @@ import { getUserImgSrc, useDoubleCheck } from '#app/utils/misc.tsx'
 import { authSessionStorage } from '#app/utils/session.server.ts'
 import { redirectWithToast } from '#app/utils/toast.server.ts'
 import { NameSchema, UsernameSchema } from '#app/utils/user-validation.ts'
-import { type Route } from './+types/profile.index.tsx'
+import { type Route, type Info } from './+types/profile.index.tsx'
 import { twoFAVerificationType } from './profile.two-factor.tsx'
 
 export const handle: SEOHandle = {
@@ -122,7 +122,7 @@ export default function EditUserProfile({ loaderData }: Route.ComponentProps) {
 					</Button>
 				</div>
 			</div>
-			<UpdateProfile />
+			<UpdateProfile loaderData={loaderData} />
 
 			<div className="col-span-6 my-6 h-1 border-b-[1.5px] border-foreground" />
 			<div className="col-span-full flex flex-col gap-6">
@@ -159,7 +159,7 @@ export default function EditUserProfile({ loaderData }: Route.ComponentProps) {
 						<Icon name="download">Download your data</Icon>
 					</Link>
 				</div>
-				<SignOutOfSessions />
+				<SignOutOfSessions loaderData={loaderData} />
 				<DeleteData />
 			</div>
 		</div>
@@ -206,9 +206,7 @@ async function profileUpdateAction({ userId, formData }: ProfileActionArgs) {
 	}
 }
 
-function UpdateProfile() {
-	const data = useLoaderData<typeof loader>()
-
+function UpdateProfile({ loaderData }: { loaderData: Info['loaderData'] }) {
 	const fetcher = useFetcher<typeof profileUpdateAction>()
 
 	const [form, fields] = useForm({
@@ -219,8 +217,8 @@ function UpdateProfile() {
 			return parseWithZod(formData, { schema: ProfileFormSchema })
 		},
 		defaultValue: {
-			username: data.user.username,
-			name: data.user.name,
+			username: loaderData.user.username,
+			name: loaderData.user.name,
 		},
 	})
 
@@ -281,12 +279,11 @@ async function signOutOfSessionsAction({ request, userId }: ProfileActionArgs) {
 	return { status: 'success' } as const
 }
 
-function SignOutOfSessions() {
-	const data = useLoaderData<typeof loader>()
+function SignOutOfSessions({ loaderData }: { loaderData: Info['loaderData'] }) {
 	const dc = useDoubleCheck()
 
 	const fetcher = useFetcher<typeof signOutOfSessionsAction>()
-	const otherSessionsCount = data.user._count.sessions - 1
+	const otherSessionsCount = loaderData.user._count.sessions - 1
 	return (
 		<div>
 			{otherSessionsCount ? (
