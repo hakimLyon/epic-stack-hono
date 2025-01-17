@@ -54,7 +54,7 @@ export function NoteEditor({
 	actionData,
 }: {
 	note?: Info['loaderData']['note']
-	actionData: Info['actionData']
+	actionData: Info['actionData'] | undefined
 }) {
 	const isPending = useIsPending()
 

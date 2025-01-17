@@ -29,8 +29,11 @@ export async function loader({ params, request }: Route.LoaderArgs) {
 	return { note: note }
 }
 
-export default function NoteEdit({ loaderData }: Route.ComponentProps) {
-	return <NoteEditor note={loaderData.note} />
+export default function NoteEdit({
+	loaderData,
+	actionData,
+}: Route.ComponentProps) {
+	return <NoteEditor actionData={actionData} note={loaderData.note} />
 }
 
 export function ErrorBoundary() {
