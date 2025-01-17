@@ -78,4 +78,11 @@
 			"}",
 		],
 	},
+	"routeType": {
+		"prefix": "/routeType",
+		"scope": "typescriptreact,javascriptreact,typescript,javascript",
+		"body": [
+		"import { type Route } from \"./+types/${TM_FILENAME_BASE}.ts\""
+	]
+}
 }
