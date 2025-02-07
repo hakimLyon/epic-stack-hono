@@ -1,7 +1,8 @@
+import { type Context, type Next } from 'hono'
 import { secureHeaders } from 'hono/secure-headers'
 import { IS_DEV } from './misc.ts'
 
-export const secureHeadersMiddleware = secureHeaders({
+const secureHeadersConfig = secureHeaders({
 	referrerPolicy: 'same-origin',
 	crossOriginEmbedderPolicy: false,
 	contentSecurityPolicy: {
@@ -20,6 +21,13 @@ export const secureHeadersMiddleware = secureHeaders({
 			(c, _) => `'nonce-${c.get('cspNonce')}'`,
 		],
 		scriptSrcAttr: [(c, _) => `'nonce-${c.get('cspNonce')}'`],
-		//upgradeInsecureRequests: undefined,
 	},
 })
+
+export const secureHeadersMiddleware = async (c: Context, next: Next) => {
+	await next()
+	// Check if the response is HTML before applying the CSP headers
+	if (c.res.headers.get('Content-Type')?.includes('text/html')) {
+		await secureHeadersConfig(c, () => Promise.resolve())
+	}
+}
