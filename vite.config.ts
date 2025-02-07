@@ -1,5 +1,6 @@
 import { reactRouter } from '@react-router/dev/vite'
 import { sentryVitePlugin } from '@sentry/vite-plugin'
+import tailwindcss from '@tailwindcss/vite'
 import { glob } from 'glob'
 import { reactRouterHonoServer } from 'react-router-hono-server/dev' // add this
 import { envOnlyMacros } from 'vite-env-only'
@@ -34,6 +35,7 @@ export default {
 		},
 	},
 	plugins: [
+		tailwindcss(),
 		envOnlyMacros(),
 		reactRouterHonoServer({ serverEntryPoint: './server' }),
 		!process.env.VITEST && reactRouter(),
