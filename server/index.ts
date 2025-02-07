@@ -25,7 +25,7 @@ export default await createHonoServer({
 	app: new Hono(),
 	defaultLogger: false,
 	getLoadContext: (c, { build }) => ({
-		cspNonce: c.get('cspNonce'),
+		cspNonce: c.get('cspNonce' as never),
 		serverBuild: build,
 	}),
 
