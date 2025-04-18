@@ -167,6 +167,7 @@ export default function PhotoRoute({
 						className="peer sr-only"
 						required
 						tabIndex={newImageSrc ? -1 : 0}
+						aria-label="Change"
 						onChange={(e) => {
 							const file = e.currentTarget.files?.[0]
 							if (file) {
