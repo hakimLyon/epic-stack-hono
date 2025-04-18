@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 import { glob } from 'glob'
 import { reactRouterHonoServer } from 'react-router-hono-server/dev' // add this
 import { envOnlyMacros } from 'vite-env-only'
+import { iconsSpritesheet } from 'vite-plugin-icons-spritesheet'
 import { type ViteUserConfig } from 'vitest/config'
 
 const MODE = process.env.NODE_ENV
@@ -18,7 +19,6 @@ export default {
 
 		assetsInlineLimit: (source: string) => {
 			if (
-				source.endsWith('sprite.svg') ||
 				source.endsWith('favicon.svg') ||
 				source.endsWith('apple-touch-icon.png')
 			) {
@@ -35,8 +35,15 @@ export default {
 		},
 	},
 	plugins: [
-		tailwindcss(),
 		envOnlyMacros(),
+		tailwindcss(),
+		iconsSpritesheet({
+			inputDir: './other/svg-icons',
+			outputDir: './app/components/ui/icons',
+			fileName: 'sprite.svg',
+			withTypes: true,
+			iconNameTransformer: (name) => name,
+		}),
 		reactRouterHonoServer({ serverEntryPoint: './server' }),
 		!process.env.VITEST && reactRouter(),
 		process.env.SENTRY_AUTH_TOKEN
